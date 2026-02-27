@@ -1,3 +1,111 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .positive {
+    @apply text-emerald-600 dark:text-emerald-400;
+  }
+  .negative {
+    @apply text-red-500 dark:text-red-400;
+  }
+  .neutral {
+    @apply text-muted-foreground;
+  }
+}
+
+@layer base {
+  :root {
+    /* ── Backgrounds ── */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 6%;
+
+    --card: 0 0% 99%;
+    --card-foreground: 0 0% 6%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 6%;
+
+    /* ── Primary ── */
+    --primary: 161, 94%, 30%;
+    --primary-foreground: 0 0% 98%;
+
+    /* ── Secondary — Brand Orange #FF4D1D ── */
+    --secondary: 14 100% 56%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* ── Muted ── */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    /* ── Accent — Verde suave para hover/fundo ── */
+    --accent: 142 30% 94%;
+    --accent-foreground: 142 72% 25%;
+
+    /* ── Destructive ── */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* ── Borders & Inputs ── */
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 142 72% 36%;
+
+    /* ── Charts ── */
+    --chart-1: 142 72% 36%; /* verde primário */
+    --chart-2: 14 100% 56%; /* laranja da marca */
+    --chart-3: 142 50% 55%; /* verde médio */
+    --chart-4: 14 80% 70%; /* laranja claro */
+    --chart-5: 142 30% 75%; /* verde bem claro */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* ── Backgrounds ── */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 96%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 96%;
+
+    /* ── Primary ── */
+    --primary: 161, 94%, 30%;
+    --primary-foreground: 0 0% 6%;
+
+    /* ── Secondary — Brand Orange #FF4D1D ── */
+    --secondary: 14 100% 56%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* ── Muted ── */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    /* ── Accent — Verde escuro para hover/fundo ── */
+    --accent: 142 30% 15%;
+    --accent-foreground: 142 65% 60%;
+
+    /* ── Destructive ── */
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* ── Borders & Inputs ── */
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 142 65% 48%;
+
+    /* ── Charts ── */
+    --chart-1: 142 65% 48%; /* verde primário */
+    --chart-2: 14 100% 60%; /* laranja da marca */
+    --chart-3: 142 50% 65%; /* verde médio */
+    --chart-4: 14 80% 72%; /* laranja claro */
+    --chart-5: 142 30% 80%; /* verde bem claro */
+  }
+}
