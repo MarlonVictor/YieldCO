@@ -1,89 +1,177 @@
-// ─── Ação (Stock) ────────────────────────────────────────────────────────────
+// ─── Asset Types ────────────────────────────────────────────────────────────
 
-export interface Stock {
-  /** Código de negociação na B3 (ex.: PETR4, WEGE3) */
+export type AssetType = "acao" | "fii";
+
+export interface Quote {
   ticker: string;
-  /** Razão social / nome abreviado */
-  nome: string;
-  /** Setor econômico */
-  setor: string | null;
-  /** Preço atual de mercado */
-  preco_atual: number;
+  name: string;
+  type: AssetType;
+  sector?: string;
+  segment?: string;
+  logoUrl?: string;
 
-  // ── Indicadores de valuation ────────────────────────────────────────────────
-  /** Preço / Lucro */
-  pl: number | null;
-  /** Preço / Valor Patrimonial */
-  pvp: number | null;
-  /** EV / EBITDA */
-  evebitda: number | null;
+  // Price
+  price: number;
+  change: number; // % change today
+  priceHigh52: number;
+  priceLow52: number;
 
-  // ── Indicadores de rentabilidade ────────────────────────────────────────────
-  /** Return on Equity — percentual (ex.: 18.5 = 18,5%) */
-  roe: number | null;
-  /** Return on Invested Capital — percentual */
-  roic: number | null;
-  /** Margem Líquida — percentual */
-  margem_liquida: number | null;
+  // Valuation – Ações
+  pe?: number; // P/L
+  pb?: number; // P/VP
+  evEbitda?: number; // EV/EBITDA
+  psr?: number; // P/Receita
 
-  // ── Endividamento ────────────────────────────────────────────────────────────
-  /** Dívida Líquida / EBITDA */
-  divida_liquida_ebitda: number | null;
+  // Rentability
+  roe?: number; // %
+  roic?: number; // %
+  dividendYield?: number; // %
+  lastDividend?: number;
 
-  // ── Por ação ─────────────────────────────────────────────────────────────────
-  /** Lucro Por Ação (LPA / EPS) */
-  lpa: number | null;
-  /** Valor Patrimonial Por Ação (VPA / BVPS) */
-  vpa: number | null;
-  /** Dividendo Por Ação — soma dos últimos 12 meses */
-  dpa: number | null;
-  /** Dividend Yield — percentual (ex.: 5.2 = 5,2%) */
-  dy: number | null;
+  // Debt
+  debtToEquity?: number;
+  netDebt?: number;
+
+  // Size
+  marketCap?: number;
+  enterpriseValue?: number;
+  bookValue?: number;
+
+  // FII specifics
+  pvp?: number;
+  vacancy?: number; // %
+  monthlyYield?: number;
+  netWorth?: number;
+  dailyLiquidity?: number;
+
+  // Revenue growth
+  revenueGrowth?: number; // % TTM
+  earningsGrowth?: number;
 }
 
-// ─── FII ─────────────────────────────────────────────────────────────────────
-
-export interface Fii {
-  /** Código de negociação na B3 (ex.: MXRF11, KNRI11) */
-  ticker: string;
-  /** Nome do fundo */
-  nome: string;
-  /** Segmento (Logística, Lajes Corporativas, Shoppings, etc.) */
-  segmento: string | null;
-  /** Preço atual de mercado */
-  preco_atual: number;
-
-  // ── Indicadores ──────────────────────────────────────────────────────────────
-  /** Preço / Valor Patrimonial */
-  pvp: number | null;
-  /** Dividend Yield dos últimos 12 meses — percentual */
-  dy_12m: number | null;
-  /** Taxa de vacância física — percentual */
-  vacancia: number | null;
-  /** Liquidez diária média — em reais */
-  liquidez_diaria: number | null;
+export interface HistoricalPoint {
+  date: string; // "YYYY-MM-DD"
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
-// ─── Valuation ───────────────────────────────────────────────────────────────
-
-export type Sinal = "compra" | "neutro" | "evitar";
-
-export interface ValuationResult {
-  /** Nome do método utilizado (ex.: "Graham", "Bazin") */
-  metodo: string;
-  /** Preço justo calculado pelo método */
-  preco_justo: number;
-  /** Margem de segurança em relação ao preço atual — percentual */
-  margem_seguranca: number;
-  /** Sinal de decisão */
-  sinal: Sinal;
+export interface DividendPoint {
+  date: string;
+  value: number;
 }
 
-// ─── Score ────────────────────────────────────────────────────────────────────
+export interface AssetDetail extends Quote {
+  history: HistoricalPoint[];
+  dividends: DividendPoint[];
+  description?: string;
+  website?: string;
+  employees?: number;
+  cnpj?: string;
+}
 
-export interface ScoreResult {
-  /** Score consolidado de 0 a 100 */
-  score: number;
-  /** Detalhamento por método de valuation */
-  detalhes: ValuationResult[];
+// ─── Screener Filters ────────────────────────────────────────────────────────
+
+export interface ScreenerFilters {
+  type: AssetType | "all";
+  sector?: string;
+  search: string;
+  pe?: { min?: number; max?: number };
+  pb?: { min?: number; max?: number };
+  dy?: { min?: number; max?: number };
+  roe?: { min?: number; max?: number };
+}
+
+export type SortField = keyof Quote;
+export type SortDirection = "asc" | "desc";
+
+export interface SortConfig {
+  field: SortField;
+  direction: SortDirection;
+}
+
+// ─── API Response ────────────────────────────────────────────────────────────
+
+export interface BrapiQuoteResponse {
+  results: BrapiResult[];
+  requestedAt: string;
+  took: string;
+}
+
+export interface BrapiResult {
+  symbol: string;
+  shortName: string;
+  longName: string;
+  currency: string;
+  regularMarketPrice: number;
+  regularMarketDayHigh: number;
+  regularMarketDayLow: number;
+  regularMarketVolume: number;
+  regularMarketChange: number;
+  regularMarketChangePercent: number;
+  regularMarketDayRange: string;
+  regularMarketPreviousClose: number;
+  fiftyTwoWeekHigh: number;
+  fiftyTwoWeekLow: number;
+  marketCap: number;
+  logourl: string;
+  priceEarnings?: number;
+  earningsPerShare?: number;
+  dividendsData?: {
+    cashDividends?: Array<{
+      assetIssued: string;
+      paymentDate: string;
+      rate: number;
+      relatedTo: string;
+      approvedOn: string;
+      isinCode: string;
+      label: string;
+      lastDatePrior: string;
+      remarks: string;
+    }>;
+  };
+  summaryProfile?: {
+    sector?: string;
+    industry?: string;
+    longBusinessSummary?: string;
+    website?: string;
+    fullTimeEmployees?: number;
+  };
+  defaultKeyStatistics?: {
+    bookValue?: number;
+    priceToBook?: number;
+    enterpriseValue?: number;
+    enterpriseToEbitda?: number;
+    enterpriseToRevenue?: number;
+    trailingEps?: number;
+    earningsGrowth?: number;
+    revenueGrowth?: number;
+    returnOnEquity?: number;
+    returnOnAssets?: number;
+  };
+  financialData?: {
+    totalDebt?: number;
+    totalStockholderEquity?: number;
+    netIncome?: number;
+    totalRevenue?: number;
+    grossProfits?: number;
+    ebitda?: number;
+    freeCashflow?: number;
+    debtToEquity?: number;
+    returnOnEquity?: number;
+    returnOnAssets?: number;
+    dividendYield?: number;
+    lastSplitFactor?: string;
+  };
+  historicalDataPrice?: Array<{
+    date: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+    adjustedClose: number;
+  }>;
 }

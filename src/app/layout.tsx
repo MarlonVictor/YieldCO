@@ -27,7 +27,7 @@ export default function RootLayout({
             <Header />
 
             {/* Conteúdo scrollável abaixo do header */}
-            <main className="flex-1 mt-14 px-4 py-6 max-w-7xl w-full mx-auto">
+            <main className="flex-1 mt-14 p-6 max-w-7xl w-full mx-auto">
               {children}
             </main>
 
