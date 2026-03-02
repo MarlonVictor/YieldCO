@@ -27,6 +27,7 @@
       "p_l": "P/L",
       "p_vp": "P/VP",
       "roe": "ROE",
+      "net_margin": "Net Margin",
       "ev_ebitda": "EV/EBITDA",
       "market_cap": "Market Cap"
     },

@@ -22,7 +22,7 @@ export function Sidebar() {
       hidden md:flex flex-col
       fixed top-0 left-0 h-screen 
       border-r border-border bg-background
-      z-30
+      w-56 z-30
     "
     >
       {/* Logo */}
@@ -31,8 +31,8 @@ export function Sidebar() {
           href="/"
           className="flex items-center font-bold text-lg text-foreground"
         >
-          <span className="flex h-56 w-56 items-center justify-center rounded-2xl bg-emerald-600 text-white mr-2">
-            <TrendingUp className="h-40 w-40" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-600 text-white mr-2">
+            <TrendingUp className="h-4 w-4" />
           </span>
           Yield<span className="text-emerald-600">.co</span>
         </Link>

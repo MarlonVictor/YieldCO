@@ -23,7 +23,7 @@ export function formatMultiple(
   decimals = 2,
 ): string {
   if (value == null || isNaN(value)) return "—";
-  return `${value.toFixed(decimals)}x`;
+  return `${value.toFixed(decimals)}`;
 }
 
 export function formatBillions(value: number | undefined | null): string {

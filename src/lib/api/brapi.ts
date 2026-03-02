@@ -32,13 +32,14 @@ function mapResult(r: BrapiResult): Quote {
   const sp = r.summaryProfile;
 
   const dividendYield =
-    fd?.dividendYield != null
-      ? fd.dividendYield * 100
-      : ks?.priceToBook != null && r.regularMarketPrice
-        ? undefined
-        : undefined;
+    fd?.dividendYield != null ? fd.dividendYield * 100 : undefined;
 
-  console.log({ r });
+  const netMargin =
+    fd?.profitMargins != null
+      ? fd.profitMargins * 100
+      : ks?.profitMargins != null
+        ? ks.profitMargins * 100
+        : undefined;
 
   return {
     ticker: r.symbol,
@@ -60,6 +61,7 @@ function mapResult(r: BrapiResult): Quote {
 
     roe: fd?.returnOnEquity != null ? fd.returnOnEquity * 100 : undefined,
     roic: undefined,
+    netMargin,
     dividendYield,
     lastDividend: r.dividendsData?.cashDividends?.[0]?.rate,
 
@@ -71,9 +73,17 @@ function mapResult(r: BrapiResult): Quote {
     bookValue: ks?.bookValue ?? undefined,
 
     revenueGrowth:
-      ks?.revenueGrowth != null ? ks.revenueGrowth * 100 : undefined,
+      fd?.revenueGrowth != null
+        ? fd.revenueGrowth * 100
+        : ks?.revenueGrowth != null
+          ? ks.revenueGrowth * 100
+          : undefined,
     earningsGrowth:
-      ks?.earningsGrowth != null ? ks.earningsGrowth * 100 : undefined,
+      fd?.earningsGrowth != null
+        ? fd.earningsGrowth * 100
+        : ks?.earningsGrowth != null
+          ? ks.earningsGrowth * 100
+          : undefined,
 
     // FII
     pvp: isFii ? ks?.priceToBook : undefined,
@@ -82,13 +92,14 @@ function mapResult(r: BrapiResult): Quote {
 }
 
 // ─── Single or batch quote ───────────────────────────────────────────────────
-
 export async function getQuotes(tickers: string[]): Promise<Quote[]> {
   const symbols = tickers.join(",");
   const modules = [
     "summaryProfile",
     "defaultKeyStatistics",
     "financialData",
+    "historicalDataPrice",
+    "dividendsData",
   ].join(",");
 
   const url = `${BASE}/quote/${symbols}?modules=${modules}&fundamental=true${authParam()}`;
@@ -100,6 +111,12 @@ export async function getQuotes(tickers: string[]): Promise<Quote[]> {
   if (!res.ok) throw new Error(`brapi quote error: ${res.status}`);
 
   const data: BrapiQuoteResponse = await res.json();
+
+  // const response = await fetch(`https://api.hgbrasil.com/finance?key=${HGBRASIL_TOKEN}`)
+  // const dataa = await response.json()
+  //
+  // console.log(dataa.results.available_sources)
+
   return (data.results ?? []).map(mapResult);
 }
 

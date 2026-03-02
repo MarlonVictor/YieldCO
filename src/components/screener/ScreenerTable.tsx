@@ -18,8 +18,10 @@ import {
   formatMultiple,
   formatPercent,
 } from "@/utils/format";
+import { useRef, useState } from "react";
 import type { Quote } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
+import { cn } from "@/utils/cn";
 
 interface ScreenerTableProps {
   data: Quote[];
@@ -27,6 +29,12 @@ interface ScreenerTableProps {
 
 export function ScreenerTable({ data }: ScreenerTableProps) {
   const { t } = useLanguage();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  function handleScroll() {
+    setScrolled((scrollRef.current?.scrollTop ?? 0) > 0);
+  }
 
   if (!data.length) {
     return (
@@ -37,16 +45,22 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
+    <div
+      ref={scrollRef}
+      onScroll={handleScroll}
+      className="overflow-auto rounded-xl border border-border max-h-[calc(100vh-16rem)]"
+    >
       <Table>
-        <TableHeader>
+        <TableHeader
+          className={cn(
+            "sticky top-0 z-20 transition-colors",
+            scrolled ? "bg-card shadow-sm" : "bg-background",
+          )}
+        >
           <TableRow className="text-xs uppercase text-muted-foreground">
             <TableHead className="w-52">{t("screener.table.ticker")}</TableHead>
             <TableHead className="text-right">
               {t("screener.table.price")}
-            </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.change")}
             </TableHead>
             <TableHead className="text-right">
               {t("screener.table.dividend_yield")}
@@ -59,6 +73,9 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
             </TableHead>
             <TableHead className="text-right">
               {t("screener.table.roe")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("screener.table.net_margin")}
             </TableHead>
             <TableHead className="text-right">
               {t("screener.table.ev_ebitda")}
@@ -79,7 +96,7 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
               <TableCell>
                 <Link
                   href={`/ativos/${q.ticker}`}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 justify-between w-40"
                 >
                   {q.logoUrl ? (
                     <Image
@@ -95,11 +112,11 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                       {q.ticker.slice(0, 2)}
                     </span>
                   )}
-                  <div>
-                    <p className="font-semibold leading-tight group-hover:text-emerald-600">
+                  <div className="flex-1">
+                    <p className="font-semibold leading-tight group-hover:text-secondary">
                       {q.ticker}
                     </p>
-                    <p className="max-w-[130px] truncate text-xs text-muted-foreground">
+                    <p className="w-24 truncate text-xs text-muted-foreground">
                       {q.name}
                     </p>
                   </div>
@@ -114,11 +131,8 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                 </Link>
               </TableCell>
 
-              <TableCell className="text-right font-mono font-medium">
-                {formatBRL(q.price)}
-              </TableCell>
-
-              <TableCell className="text-right">
+              <TableCell className="text-right font-medium flex flex-col">
+                <span className="font-semibold">{formatBRL(q.price)}</span>
                 <ChangeCell value={q.change} />
               </TableCell>
 
@@ -142,6 +156,10 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
 
               <TableCell className="text-right tabular-nums">
                 {formatPercent(q.roe)}
+              </TableCell>
+
+              <TableCell className="text-right tabular-nums">
+                {formatPercent(q.netMargin)}
               </TableCell>
 
               <TableCell className="text-right tabular-nums">

@@ -25,6 +25,7 @@ export interface Quote {
   // Rentability
   roe?: number; // %
   roic?: number; // %
+  netMargin?: number; // % margem líquida
   dividendYield?: number; // %
   lastDividend?: number;
 
@@ -145,6 +146,7 @@ export interface BrapiResult {
     enterpriseValue?: number;
     enterpriseToEbitda?: number;
     enterpriseToRevenue?: number;
+    profitMargins?: number;
     trailingEps?: number;
     earningsGrowth?: number;
     revenueGrowth?: number;
@@ -163,6 +165,12 @@ export interface BrapiResult {
     returnOnEquity?: number;
     returnOnAssets?: number;
     dividendYield?: number;
+    profitMargins?: number;
+    revenueGrowth?: number;
+    earningsGrowth?: number;
+    grossMargins?: number;
+    ebitdaMargins?: number;
+    operatingMargins?: number;
     lastSplitFactor?: string;
   };
   historicalDataPrice?: Array<{
@@ -174,4 +182,64 @@ export interface BrapiResult {
     volume: number;
     adjustedClose: number;
   }>;
+}
+
+// ─── HG Brasil API ───────────────────────────────────────────────────────────
+
+export interface HgCurrency {
+  name: string;
+  buy: number | null;
+  sell: number | null;
+  variation: number;
+}
+
+export interface HgStock {
+  name: string;
+  location: string | null;
+  points: number;
+  variation: number;
+  used_time?: string;
+}
+
+export interface HgTax {
+  date: string;
+  cdi: number;
+  selic: number;
+  daily_factor: number;
+  daily_factor_selic: number;
+}
+
+export interface HgFinanceResponse {
+  by: string;
+  valid_key: boolean;
+  results: {
+    currencies: {
+      source: string;
+      USD: HgCurrency;
+      BTC: HgCurrency;
+      [key: string]: HgCurrency | string;
+    };
+    stocks: {
+      IBOVESPA: HgStock;
+      IFIX: HgStock;
+      NASDAQ: HgStock;
+      [key: string]: HgStock;
+    };
+    taxes: HgTax[];
+  };
+  execution_time: number;
+  from_cache: boolean;
+}
+
+export interface MarketOverview {
+  currencies: {
+    USD: HgCurrency;
+    BTC: HgCurrency;
+  };
+  stocks: {
+    IBOVESPA: HgStock;
+    IFIX: HgStock;
+    // NASDAQ: HgStock;
+  };
+  taxes: HgTax[];
 }

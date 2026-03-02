@@ -15,7 +15,7 @@ export function ChangeCell({ value, className }: ChangeCellProps) {
   return (
     <span
       className={cn(
-        "font-medium tabular-nums",
+        "font-thin text-xs tabular-nums",
         value >= 0
           ? "text-emerald-600 dark:text-emerald-400"
           : "text-red-500 dark:text-red-400",
