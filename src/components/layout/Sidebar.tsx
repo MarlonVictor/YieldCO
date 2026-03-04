@@ -6,9 +6,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { TrendingUp } from "lucide-react";
 
 const NAV_ITEMS = [
-  { key: "sidebar.nav.screener", href: "/screener" },
-  // { key: "sidebar.nav.stocks", href: "" },
-  // { key: "sidebar.nav.fiis", href: "" },
+  { key: "sidebar.nav.home", href: "/" },
+  { key: "sidebar.nav.stocks", href: "/acoes" },
+  { key: "sidebar.nav.fiis", href: "/fiis" },
   // { key: "sidebar.nav.calculators", href: "" },
 ] as const;
 
@@ -26,7 +26,7 @@ export function Sidebar() {
     "
     >
       {/* Logo */}
-      <div className="px-6 py-4 border-b border-border">
+      <div className="px-6 border-b border-border h-[5.5rem] flex flex-col items-start justify-center">
         <Link
           href="/"
           className="flex items-center font-bold text-lg text-foreground"
@@ -45,7 +45,7 @@ export function Sidebar() {
       {/* Navegação */}
       <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
         {NAV_ITEMS.map(({ key, href }) => {
-          const active = href && pathname.startsWith(href);
+          const active = href && pathname === href;
           return (
             <Link
               key={key}

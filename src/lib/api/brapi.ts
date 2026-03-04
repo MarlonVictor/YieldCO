@@ -100,8 +100,10 @@ export interface TickerItem {
   type: "stock" | "fund" | "bdr";
 }
 
-export async function listTickers(): Promise<TickerItem[]> {
-  const url = `${BASE}/quote/list?sortBy=market_cap_basic&sortOrder=desc${authParam()}`;
+export async function listTickers(
+  sortBy: string = "market_cap_basic",
+): Promise<TickerItem[]> {
+  const url = `${BASE}/quote/list?sortBy=${sortBy}&sortOrder=desc${authParam()}`;
 
   const res = await fetch(url, {
     next: { revalidate: 3600 }, // 1h cache – list changes rarely
@@ -115,28 +117,44 @@ export async function listTickers(): Promise<TickerItem[]> {
 
 // ─── Screener: top tickers by market cap (dynamic) ───────────────────────────
 const SCREENER_LIMIT_ACOES = 50;
-// const SCREENER_LIMIT_FIIS = 20;
+const SCREENER_LIMIT_FIIS = 100;
 
-export async function getScreenerData(): Promise<Quote[]> {
-  // Busca lista completa ordenada por market cap e filtra por tipo
-  const all = await listTickers();
+export async function getScreenerDataAcoes(): Promise<Quote[]> {
+  // Busca lista de ações ordenada por market cap
+  const allAcoes = await listTickers("market_cap_basic");
 
-  const topAcoes = all
+  const topAcoes = allAcoes
     .filter((t) => t.type === "stock")
     .slice(0, SCREENER_LIMIT_ACOES)
     .map((t) => t.stock);
 
-  // const topFiis = all
-  //   .filter((t) => t.type === "fund")
-  //   .slice(0, SCREENER_LIMIT_FIIS)
-  //   .map((t) => t.stock);
-
   // Limita a apenas 5 requisições em paralelo para evitar rate limit
   const acaoPromises = topAcoes.map((ticker) => getQuotes(ticker));
-  // const fiiPromises = topFiis.map((ticker) => getQuotes(ticker));
-
   const acaoResults = await batchPromises(acaoPromises, 5);
-  // const fiiResults = await batchPromises(fiiPromises, 5);
 
-  return [...acaoResults.flat()];
+  return acaoResults.flat();
+}
+
+export async function getScreenerDataFiis(): Promise<Quote[]> {
+  // Busca lista de FIIs ordenada por volume
+  const allFiis = await listTickers("volume");
+
+  const topFiis = allFiis
+    .filter((t) => t.type === "fund")
+    .slice(0, SCREENER_LIMIT_FIIS)
+    .map((t) => t.stock);
+
+  // Limita a apenas 5 requisições em paralelo para evitar rate limit
+  const fiiPromises = topFiis.map((ticker) => getQuotes(ticker));
+  const fiiResults = await batchPromises(fiiPromises, 5);
+
+  return fiiResults.flat();
+}
+
+export async function getScreenerData(): Promise<Quote[]> {
+  // Busca ambas as listas (usado se necessário)
+  const acaoResults = await getScreenerDataAcoes();
+  const fiiResults = await getScreenerDataFiis();
+
+  return [...acaoResults, ...fiiResults];
 }

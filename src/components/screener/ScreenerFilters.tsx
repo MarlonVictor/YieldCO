@@ -1,8 +1,10 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback } from "react";
+import { Search, Filter, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Select,
   SelectContent,
@@ -10,11 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
 
-export function ScreenerFilters() {
+interface ScreenerFiltersProps {
+  sectors?: string[];
+  isReit?: boolean;
+}
+
+export function ScreenerFilters({ sectors, isReit }: ScreenerFiltersProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const params = useSearchParams();
   const { t } = useLanguage();
 
@@ -26,39 +32,92 @@ export function ScreenerFilters() {
       } else {
         sp.delete(key);
       }
-      router.push(`/screener?${sp.toString()}`);
+      router.push(`${pathname}?${sp.toString()}`);
     },
-    [params, router],
+    [params, router, pathname],
   );
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      {/* Search */}
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder={t("screener.search_placeholder")}
-          defaultValue={params.get("search") ?? ""}
-          className="pl-9"
-          onChange={(e) => push("search", e.target.value)}
-        />
-      </div>
+    <div className="space-y-3 rounded-lg border border-border bg-card/50 p-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {/* Search */}
+        <div
+          className={`space-y-2 ${isReit ? "sm:col-span-2 lg:col-span-3" : "sm:col-span-1 lg:col-span-2"}`}
+        >
+          <label className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Search className="h-3.5 w-3.5" />
+            {t("stocks.label_search")}
+          </label>
+          <div className="relative">
+            <Input
+              placeholder={t("stocks.search_placeholder")}
+              defaultValue={params.get("search") ?? ""}
+              onChange={(e) => push("search", e.target.value)}
+              className="bg-background"
+            />
+          </div>
+        </div>
 
-      {/* Sort */}
-      <Select
-        defaultValue={params.get("sort") ?? "marketCap"}
-        onValueChange={(v) => push("sort", v)}
-      >
-        <SelectTrigger className="w-full sm:w-48">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="marketCap">
-            {t("screener.table.market_cap")}
-          </SelectItem>
-          <SelectItem value="change">{t("screener.table.change")}</SelectItem>
-        </SelectContent>
-      </Select>
+        {/* Sector */}
+        {sectors && !isReit && (
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <Filter className="h-3.5 w-3.5" />
+              {t("stocks.label_sector")}
+            </label>
+            <Select
+              value={params.get("sector") ?? "all"}
+              onValueChange={(v) => push("sector", v)}
+            >
+              <SelectTrigger className="rounded-md border border-input bg-background text-sm">
+                <SelectValue placeholder={t("stocks.label_sector")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("stocks.all_sectors")}</SelectItem>
+                {sectors.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {/* Sort */}
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <TrendingUp className="h-3.5 w-3.5" />
+            {t("stocks.label_sort")}
+          </label>
+          <Select
+            value={(params.get("sort") ?? isReit) ? "" : "marketCap"}
+            onValueChange={(v) => push("sort", v)}
+          >
+            <SelectTrigger className="rounded-md border border-input bg-background text-sm">
+              <SelectValue placeholder={t("stocks.label_sort")} />
+            </SelectTrigger>
+            <SelectContent>
+              {!isReit && (
+                <SelectItem value="marketCap">
+                  {t("stocks.sort.marketCap")}
+                </SelectItem>
+              )}
+              <SelectItem value="price">{t("stocks.sort.price")}</SelectItem>
+              <SelectItem value="change">{t("stocks.sort.change")}</SelectItem>
+              {!isReit && (
+                <SelectItem value="pe">{t("stocks.sort.pe")}</SelectItem>
+              )}
+              <SelectItem value="priceHigh52">
+                {t("stocks.sort.priceHigh52")}
+              </SelectItem>
+              <SelectItem value="priceLow52">
+                {t("stocks.sort.priceLow52")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
     </div>
   );
 }

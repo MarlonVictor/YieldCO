@@ -3,6 +3,7 @@
     "logo": "Yield.co",
     "tagline": "Valuation simplificado",
     "nav": {
+      "home": "Home",
       "screener": "Screener",
       "stocks": "Ações",
       "fiis": "FIIs",
@@ -17,8 +18,47 @@
   "footer": {
     "text": "Yield.co — Open source. Dados: brapi.dev, BCB"
   },
-  "screener": {
+  "home": {
+    "tag": "Open Source · Gratuito · B3",
+    "title": {
+      "line1": "Valuation de Ações",
+      "line2": "& FIIs",
+      "line3": "sem complicação"
+    },
+    "paragraph": "Yield.co é um screener open source para analisar fundamentos de empresas e fundos imobiliários da B3 — direto no browser, sem login, sem banco de dados.",
+    "cta_stocks": "Ver Ações",
+    "cta_github": "Ver no GitHub",
+    "feature_1": {
+      "title": "Screener Completo",
+      "description": "Acesse dados fundamentais, múltiplos, indicadores e preços de ações e FIIs listados na B3 — tudo em um só lugar."
+    },
+    "feature_2": {
+      "title": "Análise Rápida",
+      "description": "Obtenha uma análise rápida de preço justo, margem de segurança e sinal de compra, venda ou neutro para cada ativo."
+    },
+    "feature_3": {
+      "title": "Dados em tempo real",
+      "description": "Cotações e fundamentos via brapi.dev, com cache nativo do Next.js."
+    }
+  },
+  "stocks": {
+    "title": "Ações — Ranking de Valuation",
+    "subtitle": "Ações · Dados atualizados a cada 10 minutos via brapi.dev",
+    "label_search": "Buscar",
     "search_placeholder": "Buscar por nome ou ticker...",
+    "label_sector": "Setor",
+    "filter_sector": "Filtrar por setor",
+    "all_sectors": "Todos os setores",
+    "label_sort": "Ordenar por",
+    "sort_label": "Ordenar por",
+    "sort": {
+      "marketCap": "Market Cap",
+      "price": "Preço",
+      "change": "Variação",
+      "pe": "P/E",
+      "priceHigh52": "Máximo 52 sem",
+      "priceLow52": "Mínimo 52 sem"
+    },
     "table": {
       "ticker": "Ativo",
       "sector": "Setor",
@@ -32,45 +72,14 @@
     "reit": "FII",
     "stock": "Ação"
   },
-  "stocks": {
-    "title": "Ações — Ranking de Valuation",
-    "subtitle": "Ativos ranqueados por score de desconto combinando Graham, Bazin e múltiplos fundamentalistas.",
-    "filter_sector": "Filtrar por setor",
-    "all_sectors": "Todos os setores",
-    "col_rank": "Rank",
-    "col_ticker": "Ticker",
-    "col_sector": "Setor",
-    "col_price": "Preço",
-    "col_graham": "Graham",
-    "col_bazin": "Bazin",
-    "col_margin": "Margem de Seg.",
-    "col_pl": "P/L",
-    "col_pvp": "P/VP",
-    "col_dy": "DY",
-    "col_score": "Score",
-    "loading": "Carregando ações...",
-    "empty": "Nenhuma ação encontrada."
+  "404": {
+    "title": "Ativo ou página não encontrada",
+    "message": "Verifique se o ticker está correto ou volte para Home.",
+    "cta": "Ir para home"
   },
   "fiis": {
     "title": "FIIs — Ranking de Valuation",
-    "subtitle": "Fundos Imobiliários ranqueados por P/VP, DY e comparativo com o CDI.",
-    "filter_segment": "Filtrar por segmento",
-    "all_segments": "Todos os segmentos",
-    "context_cdi": "CDI atual",
-    "context_beat_cdi": "FIIs que batem o CDI",
-    "context_below_pvp": "FIIs com P/VP abaixo de 1",
-    "col_rank": "Rank",
-    "col_ticker": "Ticker",
-    "col_segment": "Segmento",
-    "col_price": "Preço",
-    "col_pvp": "P/VP",
-    "col_dy": "DY 12M",
-    "col_dy_cdi": "DY vs CDI",
-    "col_vacancy": "Vacância",
-    "col_liquidity": "Liquidez",
-    "col_score": "Score",
-    "loading": "Carregando FIIs...",
-    "empty": "Nenhum FII encontrado."
+    "subtitle": "Fundos Imobiliários · Dados atualizados a cada 10 minutos via brapi.dev"
   },
   "asset": {
     "current_price": "Preço atual",

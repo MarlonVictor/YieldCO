@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { getScreenerData } from "@/lib/api/brapi";
+import { getScreenerDataFiis } from "@/lib/api/brapi";
 import { ScreenerTable } from "@/components/screener/ScreenerTable";
 import { ScreenerFilters } from "@/components/screener/ScreenerFilters";
-import { MarketOverviewCards } from "@/components/screener/MarketOverviewCards";
+import { ScreenerHeader } from "@/components/screener/ScreenerHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Quote, AssetType, SortField } from "@/types";
 
@@ -11,18 +11,24 @@ interface PageProps {
     type?: string;
     search?: string;
     sort?: string;
+    sector?: string;
   };
 }
 
 function filterAndSort(
   data: Quote[],
-  { type, search, sort }: PageProps["searchParams"],
+  { type, search, sort, sector }: PageProps["searchParams"],
 ): Quote[] {
   let result = [...data];
 
   // Filter by type
   if (type && type !== "all") {
     result = result.filter((q) => q.type === (type as AssetType));
+  }
+
+  // Filter by sector
+  if (sector && sector !== "all") {
+    result = result.filter((q) => q.sector === sector);
   }
 
   // Search
@@ -45,11 +51,14 @@ function filterAndSort(
   return result;
 }
 
-async function ScreenerContent({ searchParams }: PageProps) {
-  const data = await getScreenerData();
-  const filtered = filterAndSort(data, searchParams);
-
-  return <ScreenerTable data={filtered} />;
+async function ScreenerContent({
+  isReit,
+  data,
+}: {
+  isReit?: boolean;
+  data: Quote[];
+}) {
+  return <ScreenerTable isReit={isReit} data={data} />;
 }
 
 function ScreenerSkeleton() {
@@ -62,47 +71,26 @@ function ScreenerSkeleton() {
   );
 }
 
-export default function ScreenerPage({ searchParams }: PageProps) {
-  const total =
-    searchParams.type === "fii"
-      ? "20 FIIs"
-      : searchParams.type === "acao"
-        ? "32 Ações"
-        : "52 ativos";
+export default async function FiisPage({ searchParams }: PageProps) {
+  const data = await getScreenerDataFiis();
+
+  // Calculate filtered data (force type = "fii")
+  const filtered = filterAndSort(data, { ...searchParams, type: "fii" });
+  const total = filtered.length;
 
   return (
     <div>
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Screener B3</h1>
-        <p className="text-sm text-muted-foreground">
-          {total} · Dados atualizados a cada 10 minutos via brapi.dev
-        </p>
-      </div>
-
-      {/* Market overview bignumbers */}
-      <div className="mb-6">
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-xl" />
-              ))}
-            </div>
-          }
-        >
-          <MarketOverviewCards />
-        </Suspense>
-      </div>
+      <ScreenerHeader isReit={true} total={total} />
 
       {/* Filters — client component */}
       <div className="mb-5">
-        <ScreenerFilters />
+        <ScreenerFilters isReit={true} />
       </div>
 
       {/* Table — streamed */}
       <Suspense fallback={<ScreenerSkeleton />}>
-        <ScreenerContent searchParams={searchParams} />
+        <ScreenerContent isReit={true} data={filtered} />
       </Suspense>
     </div>
   );

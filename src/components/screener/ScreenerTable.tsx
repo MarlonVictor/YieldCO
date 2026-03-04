@@ -30,9 +30,10 @@ import {
 
 interface ScreenerTableProps {
   data: Quote[];
+  isReit?: boolean;
 }
 
-export function ScreenerTable({ data }: ScreenerTableProps) {
+export function ScreenerTable({ data, isReit }: ScreenerTableProps) {
   const { t } = useLanguage();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -44,7 +45,7 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
   if (!data.length) {
     return (
       <p className="py-16 text-center text-muted-foreground">
-        {t("screener.no_assets_found")}
+        {t("stocks.no_assets_found")}
       </p>
     );
   }
@@ -63,20 +64,24 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
           )}
         >
           <TableRow className="text-xs uppercase text-muted-foreground">
-            <TableHead className="w-52">{t("screener.table.ticker")}</TableHead>
-            <TableHead>{t("screener.table.sector")}</TableHead>
-            <TableHead className="text-right w-24">
-              {t("screener.table.price")}
-            </TableHead>
-            <TableHead className="text-right w-40">
-              {t("screener.table.range")}
+            <TableHead className="w-52">{t("stocks.table.ticker")}</TableHead>
+            {!isReit && <TableHead>{t("stocks.table.sector")}</TableHead>}
+            <TableHead className="text-right">
+              {t("stocks.table.price")}
             </TableHead>
             <TableHead className="text-right">
-              {t("screener.table.p_e")}
+              {t("stocks.table.range")}
             </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.market_cap")}
-            </TableHead>
+            {!isReit && (
+              <>
+                <TableHead className="text-right">
+                  {t("stocks.table.p_e")}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t("stocks.table.market_cap")}
+                </TableHead>
+              </>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -120,27 +125,29 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                 </Link>
               </TableCell>
 
-              <TableCell className="text-xs text-muted-foreground">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span>{q.sector ?? "—"}</span>
-                    </TooltipTrigger>
-                    {q.segment && (
-                      <TooltipContent>
-                        <p className="max-w-xs text-xs">{q.segment}</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </TableCell>
+              {!isReit && (
+                <TableCell className="text-xs text-muted-foreground">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>{q.sector ?? "—"}</span>
+                      </TooltipTrigger>
+                      {q.segment && (
+                        <TooltipContent>
+                          <p className="max-w-xs text-xs">{q.segment}</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                </TableCell>
+              )}
 
-              <TableCell className="text-right font-medium flex flex-col w-24">
+              <TableCell className="text-right font-medium flex flex-col">
                 <span className="font-semibold">{formatBRL(q.price)}</span>
                 <ChangeCell value={q.change} />
               </TableCell>
 
-              <TableCell className="text-right w-40">
+              <TableCell className="text-right">
                 <p className="font-semibold">
                   {parseAndFormatBRL(q.dayRange.split(" - ").at(0))} -{" "}
                   {parseAndFormatBRL(q.dayRange.split(" - ").at(1))}
@@ -150,13 +157,17 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                 </p>
               </TableCell>
 
-              <TableCell className="text-right tabular-nums">
-                {formatMultiple(q.pe)}
-              </TableCell>
+              {!isReit && (
+                <>
+                  <TableCell className="text-right tabular-nums">
+                    {formatMultiple(q.pe)}
+                  </TableCell>
 
-              <TableCell className="text-right tabular-nums text-xs text-muted-foreground">
-                {formatBillions(q.marketCap)}
-              </TableCell>
+                  <TableCell className="text-right tabular-nums text-xs text-muted-foreground">
+                    {formatBillions(q.marketCap)}
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>
