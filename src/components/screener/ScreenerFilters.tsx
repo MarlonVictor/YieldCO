@@ -56,12 +56,6 @@ export function ScreenerFilters() {
           <SelectItem value="marketCap">
             {t("screener.table.market_cap")}
           </SelectItem>
-          <SelectItem value="dividendYield">
-            {t("screener.table.dividend_yield")}
-          </SelectItem>
-          <SelectItem value="pe">{t("screener.table.p_l")}</SelectItem>
-          <SelectItem value="pb">{t("screener.table.p_vp")}</SelectItem>
-          <SelectItem value="roe">{t("screener.table.roe")}</SelectItem>
           <SelectItem value="change">{t("screener.table.change")}</SelectItem>
         </SelectContent>
       </Select>

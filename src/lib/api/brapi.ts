@@ -6,14 +6,7 @@
  * Token is optional for reasonable rate-limits; set BRAPI_TOKEN env to unlock higher limits.
  */
 
-import type {
-  AssetDetail,
-  BrapiQuoteResponse,
-  BrapiResult,
-  DividendPoint,
-  HistoricalPoint,
-  Quote,
-} from "@/types";
+import type { BrapiQuoteResponse, BrapiResult, Quote } from "@/types";
 
 const BASE = "https://brapi.dev/api";
 const TOKEN = process.env.BRAPI_TOKEN ?? "";
@@ -25,99 +18,72 @@ function authParam() {
 // ─── Map brapi result → our Quote type ──────────────────────────────────────
 
 function mapResult(r: BrapiResult): Quote {
-  const isFii = /^[A-Z]{4}11$/.test(r.symbol);
-
-  const ks = r.defaultKeyStatistics;
-  const fd = r.financialData;
   const sp = r.summaryProfile;
-
-  const dividendYield =
-    fd?.dividendYield != null ? fd.dividendYield * 100 : undefined;
-
-  const netMargin =
-    fd?.profitMargins != null
-      ? fd.profitMargins * 100
-      : ks?.profitMargins != null
-        ? ks.profitMargins * 100
-        : undefined;
+  const isFii = sp?.sectorKey === "fundos-imobiliarios";
 
   return {
     ticker: r.symbol,
     name: r.shortName || r.longName,
+    longName: r.longName,
     type: isFii ? "fii" : "acao",
     sector: sp?.sector,
     segment: sp?.industry,
     logoUrl: r.logourl,
+    summary: sp?.longBusinessSummary,
+    website: sp?.website,
 
     price: r.regularMarketPrice,
     change: r.regularMarketChangePercent,
+    dayRange: r.regularMarketDayRange,
     priceHigh52: r.fiftyTwoWeekHigh,
     priceLow52: r.fiftyTwoWeekLow,
 
     pe: r.priceEarnings ?? undefined,
-    pb: ks?.priceToBook ?? undefined,
-    evEbitda: ks?.enterpriseToEbitda ?? undefined,
-    psr: ks?.enterpriseToRevenue ?? undefined,
 
-    roe: fd?.returnOnEquity != null ? fd.returnOnEquity * 100 : undefined,
-    roic: undefined,
-    netMargin,
-    dividendYield,
     lastDividend: r.dividendsData?.cashDividends?.[0]?.rate,
-
-    debtToEquity: fd?.debtToEquity ?? undefined,
-    netDebt: undefined,
-
     marketCap: r.marketCap,
-    enterpriseValue: ks?.enterpriseValue ?? undefined,
-    bookValue: ks?.bookValue ?? undefined,
 
-    revenueGrowth:
-      fd?.revenueGrowth != null
-        ? fd.revenueGrowth * 100
-        : ks?.revenueGrowth != null
-          ? ks.revenueGrowth * 100
-          : undefined,
-    earningsGrowth:
-      fd?.earningsGrowth != null
-        ? fd.earningsGrowth * 100
-        : ks?.earningsGrowth != null
-          ? ks.earningsGrowth * 100
-          : undefined,
-
-    // FII
-    pvp: isFii ? ks?.priceToBook : undefined,
     dailyLiquidity: r.regularMarketVolume,
   };
 }
 
 // ─── Single or batch quote ───────────────────────────────────────────────────
-export async function getQuotes(tickers: string[]): Promise<Quote[]> {
-  const symbols = tickers.join(",");
-  const modules = [
-    "summaryProfile",
-    "defaultKeyStatistics",
-    "financialData",
-    "historicalDataPrice",
-    "dividendsData",
-  ].join(",");
+export async function getQuotes(ticker: string): Promise<Quote[]> {
+  try {
+    const url = `${BASE}/quote/${ticker}?modules=summaryProfile&fundamental=true${authParam()}`;
 
-  const url = `${BASE}/quote/${symbols}?modules=${modules}&fundamental=true${authParam()}`;
+    const res = await fetch(url, {
+      next: { revalidate: 600 }, // 10-min cache
+    });
 
-  const res = await fetch(url, {
-    next: { revalidate: 600 }, // 10-min cache
-  });
+    if (!res.ok) {
+      const errorData = await res.text();
+      console.warn(`⚠️  Ticker ${ticker} erro ${res.status}:`, errorData);
+      return [];
+    }
 
-  if (!res.ok) throw new Error(`brapi quote error: ${res.status}`);
+    const data: BrapiQuoteResponse = await res.json();
+    const results = (data.results ?? []).map(mapResult);
 
-  const data: BrapiQuoteResponse = await res.json();
+    return results;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar ${ticker}:`, error);
+    return [];
+  }
+}
 
-  // const response = await fetch(`https://api.hgbrasil.com/finance?key=${HGBRASIL_TOKEN}`)
-  // const dataa = await response.json()
-  //
-  // console.log(dataa.results.available_sources)
-
-  return (data.results ?? []).map(mapResult);
+// ─── Helper para limitar paralelismo ─────────────────────────────────────────
+async function batchPromises<T>(
+  promises: Promise<T>[],
+  limit: number = 5,
+): Promise<T[]> {
+  const results: T[] = [];
+  for (let i = 0; i < promises.length; i += limit) {
+    const batch = promises.slice(i, i + limit);
+    const batchResults = await Promise.all(batch);
+    results.push(...batchResults);
+  }
+  return results;
 }
 
 // ─── List available tickers ──────────────────────────────────────────────────
@@ -135,7 +101,7 @@ export interface TickerItem {
 }
 
 export async function listTickers(): Promise<TickerItem[]> {
-  const url = `${BASE}/quote/list?sortBy=market_cap&sortOrder=desc${authParam()}`;
+  const url = `${BASE}/quote/list?sortBy=market_cap_basic&sortOrder=desc${authParam()}`;
 
   const res = await fetch(url, {
     next: { revalidate: 3600 }, // 1h cache – list changes rarely
@@ -147,126 +113,30 @@ export async function listTickers(): Promise<TickerItem[]> {
   return data.stocks ?? [];
 }
 
-// ─── Detail with history + dividends ─────────────────────────────────────────
-
-export async function getAssetDetail(ticker: string): Promise<AssetDetail> {
-  const modules = [
-    "summaryProfile",
-    "defaultKeyStatistics",
-    "financialData",
-    "historicalDataPrice",
-    "dividendsData",
-  ].join(",");
-
-  const url = `${BASE}/quote/${ticker}?modules=${modules}&fundamental=true&range=1y&interval=1d${authParam()}`;
-
-  const res = await fetch(url, {
-    next: { revalidate: 600 },
-  });
-
-  if (!res.ok) throw new Error(`brapi detail error: ${res.status}`);
-
-  const data: BrapiQuoteResponse = await res.json();
-  const r = data.results?.[0];
-  if (!r) throw new Error(`Ticker ${ticker} not found`);
-
-  const quote = mapResult(r);
-
-  const history: HistoricalPoint[] = (r.historicalDataPrice ?? []).map((p) => ({
-    date: new Date(p.date * 1000).toISOString().split("T")[0],
-    open: p.open,
-    high: p.high,
-    low: p.low,
-    close: p.close,
-    volume: p.volume,
-  }));
-
-  const dividends: DividendPoint[] = (r.dividendsData?.cashDividends ?? []).map(
-    (d) => ({
-      date: d.paymentDate,
-      value: d.rate,
-    }),
-  );
-
-  return {
-    ...quote,
-    history,
-    dividends,
-    description: r.summaryProfile?.longBusinessSummary,
-    website: r.summaryProfile?.website,
-    employees: r.summaryProfile?.fullTimeEmployees,
-  };
-}
-
-// ─── Screener: top tickers by market cap ─────────────────────────────────────
-
-const TOP_ACOES = [
-  "PETR4",
-  "VALE3",
-  "ITUB4",
-  "BBDC4",
-  "ABEV3",
-  "WEGE3",
-  "RENT3",
-  "BRFS3",
-  "SUZB3",
-  "LREN3",
-  "MGLU3",
-  "VBBR3",
-  "GGBR4",
-  "CSNA3",
-  "USIM5",
-  "CSAN3",
-  "BEEF3",
-  "JBSS3",
-  "MRFG3",
-  "PRIO3",
-  "ENEV3",
-  "EGIE3",
-  "CPFE3",
-  "CMIG4",
-  "EMBR3",
-  "RADL3",
-  "RDOR3",
-  "HAPV3",
-  "BBAS3",
-  "SANB11",
-  "ITSA4",
-  "BPAC11",
-];
-
-const TOP_FIIS = [
-  "MXRF11",
-  "HGLG11",
-  "XPML11",
-  "XPLG11",
-  "VISC11",
-  "IRDM11",
-  "BTLG11",
-  "RBRF11",
-  "KNRI11",
-  "BCFF11",
-  "RBRP11",
-  "HGRU11",
-  "ALZR11",
-  "TRXF11",
-  "PVBI11",
-  "CPTS11",
-  "VGIP11",
-  "KNCR11",
-  "HCTR11",
-  "MCCI11",
-];
+// ─── Screener: top tickers by market cap (dynamic) ───────────────────────────
+const SCREENER_LIMIT_ACOES = 50;
+// const SCREENER_LIMIT_FIIS = 20;
 
 export async function getScreenerData(): Promise<Quote[]> {
-  const tickers = [...TOP_ACOES, ...TOP_FIIS];
+  // Busca lista completa ordenada por market cap e filtra por tipo
+  const all = await listTickers();
 
-  // brapi supports up to ~20 tickers per request in free tier
-  const chunks: string[][] = [];
-  for (let i = 0; i < tickers.length; i += 20) {
-    chunks.push(tickers.slice(i, i + 20));
-  }
+  const topAcoes = all
+    .filter((t) => t.type === "stock")
+    .slice(0, SCREENER_LIMIT_ACOES)
+    .map((t) => t.stock);
 
-  const results = await Promise.all(chunks.map((chunk) => getQuotes(chunk)));
-  return results.flat();
+  // const topFiis = all
+  //   .filter((t) => t.type === "fund")
+  //   .slice(0, SCREENER_LIMIT_FIIS)
+  //   .map((t) => t.stock);
+
+  // Limita a apenas 5 requisições em paralelo para evitar rate limit
+  const acaoPromises = topAcoes.map((ticker) => getQuotes(ticker));
+  // const fiiPromises = topFiis.map((ticker) => getQuotes(ticker));
+
+  const acaoResults = await batchPromises(acaoPromises, 5);
+  // const fiiResults = await batchPromises(fiiPromises, 5);
+
+  return [...acaoResults.flat()];
 }

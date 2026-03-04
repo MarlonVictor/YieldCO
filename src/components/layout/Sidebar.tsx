@@ -7,9 +7,9 @@ import { TrendingUp } from "lucide-react";
 
 const NAV_ITEMS = [
   { key: "sidebar.nav.screener", href: "/screener" },
-  { key: "sidebar.nav.stocks", href: "" },
-  { key: "sidebar.nav.fiis", href: "" },
-  { key: "sidebar.nav.calculators", href: "" },
+  // { key: "sidebar.nav.stocks", href: "" },
+  // { key: "sidebar.nav.fiis", href: "" },
+  // { key: "sidebar.nav.calculators", href: "" },
 ] as const;
 
 export function Sidebar() {

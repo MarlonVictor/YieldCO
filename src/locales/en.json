@@ -21,14 +21,11 @@
     "search_placeholder": "Search by name or ticker...",
     "table": {
       "ticker": "Ticker",
+      "sector": "Sector",
       "price": "Price",
+      "range": "Range",
       "change": "Variation",
-      "dividend_yield": "DY",
-      "p_l": "P/L",
-      "p_vp": "P/VP",
-      "roe": "ROE",
-      "net_margin": "Net Margin",
-      "ev_ebitda": "EV/EBITDA",
+      "p_e": "P/E",
       "market_cap": "Market Cap"
     },
     "no_assets_found": "No assets found.",

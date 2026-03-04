@@ -10,18 +10,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { ChangeCell } from "./ChangeCell";
-import {
-  formatBRL,
-  formatBillions,
-  formatMultiple,
-  formatPercent,
-} from "@/utils/format";
+import { formatBRL, formatBillions, formatMultiple } from "@/utils/format";
 import { useRef, useState } from "react";
 import type { Quote } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/utils/cn";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface ScreenerTableProps {
   data: Quote[];
@@ -59,26 +59,15 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
         >
           <TableRow className="text-xs uppercase text-muted-foreground">
             <TableHead className="w-52">{t("screener.table.ticker")}</TableHead>
-            <TableHead className="text-right">
+            <TableHead>{t("screener.table.sector")}</TableHead>
+            <TableHead className="text-right w-24">
               {t("screener.table.price")}
             </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.dividend_yield")}
+            <TableHead className="text-right w-40">
+              {t("screener.table.range")}
             </TableHead>
             <TableHead className="text-right">
-              {t("screener.table.p_l")}
-            </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.p_vp")}
-            </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.roe")}
-            </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.net_margin")}
-            </TableHead>
-            <TableHead className="text-right">
-              {t("screener.table.ev_ebitda")}
+              {t("screener.table.p_e")}
             </TableHead>
             <TableHead className="text-right">
               {t("screener.table.market_cap")}
@@ -96,7 +85,7 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
               <TableCell>
                 <Link
                   href={`/ativos/${q.ticker}`}
-                  className="flex items-center gap-3 justify-between w-40"
+                  className="flex items-center gap-3 w-40"
                 >
                   {q.logoUrl ? (
                     <Image
@@ -104,11 +93,11 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                       alt={q.name}
                       width={28}
                       height={28}
-                      className="rounded-md object-contain"
+                      className="rounded-md object-contain bg-card"
                       unoptimized
                     />
                   ) : (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-[10px] font-bold">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-[.625rem] font-bold">
                       {q.ticker.slice(0, 2)}
                     </span>
                   )}
@@ -116,54 +105,48 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
                     <p className="font-semibold leading-tight group-hover:text-secondary">
                       {q.ticker}
                     </p>
-                    <p className="w-24 truncate text-xs text-muted-foreground">
-                      {q.name}
+                    <p
+                      className="w-32 truncate text-xs text-muted-foreground"
+                      title={q.longName}
+                    >
+                      {q.longName}
                     </p>
                   </div>
-                  <Badge
-                    variant="outline"
-                    className="hidden text-[.5rem] lg:inline-flex uppercase"
-                  >
-                    {q.type === "fii"
-                      ? t("screener.reit")
-                      : t("screener.stock")}
-                  </Badge>
                 </Link>
               </TableCell>
 
-              <TableCell className="text-right font-medium flex flex-col">
+              <TableCell className="text-xs text-muted-foreground">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>{q.sector ?? "—"}</span>
+                    </TooltipTrigger>
+                    {q.segment && (
+                      <TooltipContent>
+                        <p className="max-w-xs text-xs">{q.segment}</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
+
+              <TableCell className="text-right font-medium flex flex-col w-24">
                 <span className="font-semibold">{formatBRL(q.price)}</span>
                 <ChangeCell value={q.change} />
               </TableCell>
 
-              <TableCell className="text-right tabular-nums">
-                {q.dividendYield != null ? (
-                  <span className="font-medium text-emerald-600 dark:text-emerald-400">
-                    {formatPercent(q.dividendYield)}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">—</span>
-                )}
+              <TableCell className="text-right w-40">
+                <p className="font-semibold">
+                  {formatBRL(q.dayRange.split(" - ").at(0))} -{" "}
+                  {formatBRL(q.dayRange.split(" - ").at(1))}
+                </p>
+                <p className="font-thin text-xs tabular-nums text-muted-foreground">
+                  {formatBRL(q.priceLow52)} - {formatBRL(q.priceHigh52)}
+                </p>
               </TableCell>
 
               <TableCell className="text-right tabular-nums">
                 {formatMultiple(q.pe)}
-              </TableCell>
-
-              <TableCell className="text-right tabular-nums">
-                {formatMultiple(q.pb ?? q.pvp)}
-              </TableCell>
-
-              <TableCell className="text-right tabular-nums">
-                {formatPercent(q.roe)}
-              </TableCell>
-
-              <TableCell className="text-right tabular-nums">
-                {formatPercent(q.netMargin)}
-              </TableCell>
-
-              <TableCell className="text-right tabular-nums">
-                {formatMultiple(q.evEbitda)}
               </TableCell>
 
               <TableCell className="text-right tabular-nums text-xs text-muted-foreground">

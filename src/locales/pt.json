@@ -21,14 +21,11 @@
     "search_placeholder": "Buscar por nome ou ticker...",
     "table": {
       "ticker": "Ativo",
+      "sector": "Setor",
       "price": "Preço",
+      "range": "Range",
       "change": "Var. Hoje",
-      "dividend_yield": "DY",
-      "p_l": "P/L",
-      "p_vp": "P/VP",
-      "roe": "ROE",
-      "net_margin": "Margem Líq.",
-      "ev_ebitda": "EV/EBITDA",
+      "p_e": "P/E",
       "market_cap": "Market Cap"
     },
     "no_assets_found": "Nenhum ativo encontrado.",

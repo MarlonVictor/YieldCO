@@ -5,49 +5,25 @@ export type AssetType = "acao" | "fii";
 export interface Quote {
   ticker: string;
   name: string;
+  longName?: string;
   type: AssetType;
   sector?: string;
   segment?: string;
   logoUrl?: string;
+  summary?: string;
+  website?: string;
 
-  // Price
   price: number;
   change: number; // % change today
+  dayRange: string; // "min - max" do dia
   priceHigh52: number;
   priceLow52: number;
 
-  // Valuation – Ações
   pe?: number; // P/L
-  pb?: number; // P/VP
-  evEbitda?: number; // EV/EBITDA
-  psr?: number; // P/Receita
-
-  // Rentability
-  roe?: number; // %
-  roic?: number; // %
-  netMargin?: number; // % margem líquida
-  dividendYield?: number; // %
   lastDividend?: number;
 
-  // Debt
-  debtToEquity?: number;
-  netDebt?: number;
-
-  // Size
   marketCap?: number;
-  enterpriseValue?: number;
-  bookValue?: number;
-
-  // FII specifics
-  pvp?: number;
-  vacancy?: number; // %
-  monthlyYield?: number;
-  netWorth?: number;
   dailyLiquidity?: number;
-
-  // Revenue growth
-  revenueGrowth?: number; // % TTM
-  earningsGrowth?: number;
 }
 
 export interface HistoricalPoint {
@@ -139,6 +115,7 @@ export interface BrapiResult {
     longBusinessSummary?: string;
     website?: string;
     fullTimeEmployees?: number;
+    sectorKey?: string;
   };
   defaultKeyStatistics?: {
     bookValue?: number;
