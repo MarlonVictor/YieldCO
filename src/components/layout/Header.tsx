@@ -3,6 +3,12 @@
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 // Ícone GitHub (SVG inline para não precisar de lib)
 function GithubIcon() {
@@ -73,25 +79,41 @@ export function Header() {
     "
     >
       {/* GitHub */}
-      <a
-        href="https://github.com/MarlonVictor/YieldCO"
-        target="_blank"
-        rel="noopener noreferrer"
-        title={t("header.github_tooltip")}
-        className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
-      >
-        <GithubIcon />
-      </a>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <a
+              href="https://github.com/MarlonVictor/YieldCO"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+            >
+              <GithubIcon />
+            </a>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="max-w-xs text-xs">{t("header.github_tooltip")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* Dark mode toggle */}
       {mounted && (
-        <button
-          onClick={() => setTheme(isDark ? "light" : "dark")}
-          title={t("header.darkmode_tooltip")}
-          className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
-        >
-          {isDark ? <SunIcon /> : <MoonIcon />}
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setTheme(isDark ? "light" : "dark")}
+                className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+              >
+                {isDark ? <SunIcon /> : <MoonIcon />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="max-w-xs text-xs">{t("header.darkmode_tooltip")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
 
       {/* Language toggle */}

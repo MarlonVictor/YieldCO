@@ -17,6 +17,21 @@
   "footer": {
     "text": "Yield.co — Open source. Dados: brapi.dev, BCB"
   },
+  "screener": {
+    "search_placeholder": "Buscar por nome ou ticker...",
+    "table": {
+      "ticker": "Ativo",
+      "sector": "Setor",
+      "price": "Preço",
+      "range": "Range",
+      "change": "Var. Hoje",
+      "p_e": "P/E",
+      "market_cap": "Market Cap"
+    },
+    "no_assets_found": "Nenhum ativo encontrado.",
+    "reit": "FII",
+    "stock": "Ação"
+  },
   "stocks": {
     "title": "Ações — Ranking de Valuation",
     "subtitle": "Ativos ranqueados por score de desconto combinando Graham, Bazin e múltiplos fundamentalistas.",
@@ -72,33 +87,5 @@
     "signal_buy": "Compra",
     "signal_neutral": "Neutro",
     "signal_avoid": "Evitar"
-  },
-  "calculators": {
-    "title": "Calculadoras",
-    "subtitle": "Ferramentas para calcular valuation e simular investimentos.",
-    "tab_fair_price": "Preço Justo",
-    "tab_fii_income": "Renda com FIIs",
-    "tab_margin": "Margem de Segurança",
-    "tab_gordon": "Modelo de Gordon",
-    "label_lpa": "LPA (Lucro por Ação)",
-    "label_vpa": "VPA (Valor Patrimonial por Ação)",
-    "label_dpa": "DPA (Dividendo por Ação)",
-    "label_current_price": "Preço Atual (R$)",
-    "label_monthly_income": "Renda mensal desejada (R$)",
-    "label_dy_annual": "DY anual (%)",
-    "label_share_price": "Preço da cota (R$)",
-    "label_fair_price": "Preço justo estimado (R$)",
-    "label_growth": "Taxa de crescimento dos dividendos (%)",
-    "label_discount": "Taxa de desconto (%)",
-    "result_graham": "Graham",
-    "result_bazin": "Bazin",
-    "result_margin": "Margem de Segurança",
-    "result_patrimony": "Patrimônio necessário",
-    "result_shares": "Número de cotas",
-    "result_gordon": "Preço justo (Gordon)",
-    "margin_excellent": "Excelente (> 30%)",
-    "margin_good": "Boa (15–30%)",
-    "margin_moderate": "Moderada (5–15%)",
-    "margin_none": "Inexistente (< 5%)"
   }
 }

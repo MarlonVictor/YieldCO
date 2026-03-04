@@ -7,9 +7,9 @@ import { TrendingUp } from "lucide-react";
 
 const NAV_ITEMS = [
   { key: "sidebar.nav.screener", href: "/screener" },
-  { key: "sidebar.nav.stocks", href: "/acoes" },
-  { key: "sidebar.nav.fiis", href: "/fiis" },
-  { key: "sidebar.nav.calculators", href: "/calculadoras" },
+  // { key: "sidebar.nav.stocks", href: "" },
+  // { key: "sidebar.nav.fiis", href: "" },
+  // { key: "sidebar.nav.calculators", href: "" },
 ] as const;
 
 export function Sidebar() {
@@ -20,9 +20,9 @@ export function Sidebar() {
     <aside
       className="
       hidden md:flex flex-col
-      fixed top-0 left-0 h-screen w-56
+      fixed top-0 left-0 h-screen 
       border-r border-border bg-background
-      z-30
+      w-56 z-30
     "
     >
       {/* Logo */}
@@ -45,11 +45,12 @@ export function Sidebar() {
       {/* Navegação */}
       <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
         {NAV_ITEMS.map(({ key, href }) => {
-          const active = pathname.startsWith(href);
+          const active = href && pathname.startsWith(href);
           return (
             <Link
-              key={href}
+              key={key}
               href={href}
+              onClick={(e) => !href && e.preventDefault()}
               className={`
                 px-3 py-2 rounded-md text-sm transition-colors
                 ${
@@ -57,6 +58,7 @@ export function Sidebar() {
                     ? "bg-accent text-accent-foreground font-medium border-l-2 border-primary pl-[10px]"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                 }
+                ${!href ? "opacity-50 cursor-not-allowed" : ""}
               `}
             >
               {t(key)}
