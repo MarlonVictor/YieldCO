@@ -4,7 +4,7 @@ import { cn } from "@/utils/cn";
 import { formatBRL, formatPoints, formatUSD } from "@/utils/format";
 import {
   Bitcoin,
-  Building2,
+  Building,
   ChartColumn,
   DollarSign,
   Percent,
@@ -122,7 +122,7 @@ export default async function MarketOverviewSummary() {
         format={formatPoints}
       />
       <SummaryCard
-        icon={<Building2 className="h-3 w-3" />}
+        icon={<Building className="h-3 w-3" />}
         title="IFIX"
         pointsData={overview.stocks.IFIX}
         format={formatPoints}

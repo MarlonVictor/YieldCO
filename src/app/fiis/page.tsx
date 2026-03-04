@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getScreenerData } from "@/lib/api/brapi";
+import { getScreenerDataFiis } from "@/lib/api/brapi";
 import { ScreenerTable } from "@/components/screener/ScreenerTable";
 import { ScreenerFilters } from "@/components/screener/ScreenerFilters";
 import { ScreenerHeader } from "@/components/screener/ScreenerHeader";
@@ -51,8 +51,14 @@ function filterAndSort(
   return result;
 }
 
-async function ScreenerContent({ data }: { data: Quote[] }) {
-  return <ScreenerTable data={data} />;
+async function ScreenerContent({
+  isReit,
+  data,
+}: {
+  isReit?: boolean;
+  data: Quote[];
+}) {
+  return <ScreenerTable isReit={isReit} data={data} />;
 }
 
 function ScreenerSkeleton() {
@@ -65,31 +71,26 @@ function ScreenerSkeleton() {
   );
 }
 
-export default async function ScreenerPage({ searchParams }: PageProps) {
-  const data = await getScreenerData();
+export default async function FiisPage({ searchParams }: PageProps) {
+  const data = await getScreenerDataFiis();
 
-  // Extract unique, non-null sectors from the full dataset (always from unfiltered data)
-  const sectors = Array.from(
-    new Set(data.map((q) => q.sector).filter((s): s is string => Boolean(s))),
-  ).sort();
-
-  // Calculate filtered data
-  const filtered = filterAndSort(data, searchParams);
+  // Calculate filtered data (force type = "fii")
+  const filtered = filterAndSort(data, { ...searchParams, type: "fii" });
   const total = filtered.length;
 
   return (
     <div>
       {/* Header */}
-      <ScreenerHeader total={total} />
+      <ScreenerHeader isReit={true} total={total} />
 
       {/* Filters — client component */}
       <div className="mb-5">
-        <ScreenerFilters sectors={sectors} />
+        <ScreenerFilters isReit={true} />
       </div>
 
       {/* Table — streamed */}
       <Suspense fallback={<ScreenerSkeleton />}>
-        <ScreenerContent data={filtered} />
+        <ScreenerContent isReit={true} data={filtered} />
       </Suspense>
     </div>
   );

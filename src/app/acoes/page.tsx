@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getScreenerData } from "@/lib/api/brapi";
+import { getScreenerDataAcoes } from "@/lib/api/brapi";
 import { ScreenerTable } from "@/components/screener/ScreenerTable";
 import { ScreenerFilters } from "@/components/screener/ScreenerFilters";
 import { ScreenerHeader } from "@/components/screener/ScreenerHeader";
@@ -66,15 +66,15 @@ function ScreenerSkeleton() {
 }
 
 export default async function ScreenerPage({ searchParams }: PageProps) {
-  const data = await getScreenerData();
+  const data = await getScreenerDataAcoes();
 
   // Extract unique, non-null sectors from the full dataset (always from unfiltered data)
   const sectors = Array.from(
     new Set(data.map((q) => q.sector).filter((s): s is string => Boolean(s))),
   ).sort();
 
-  // Calculate filtered data
-  const filtered = filterAndSort(data, searchParams);
+  // Calculate filtered data (force type = "acao")
+  const filtered = filterAndSort(data, { ...searchParams, type: "acao" });
   const total = filtered.length;
 
   return (

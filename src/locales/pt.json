@@ -79,24 +79,7 @@
   },
   "fiis": {
     "title": "FIIs — Ranking de Valuation",
-    "subtitle": "Fundos Imobiliários ranqueados por P/VP, DY e comparativo com o CDI.",
-    "filter_segment": "Filtrar por segmento",
-    "all_segments": "Todos os segmentos",
-    "context_cdi": "CDI atual",
-    "context_beat_cdi": "FIIs que batem o CDI",
-    "context_below_pvp": "FIIs com P/VP abaixo de 1",
-    "col_rank": "Rank",
-    "col_ticker": "Ticker",
-    "col_segment": "Segmento",
-    "col_price": "Preço",
-    "col_pvp": "P/VP",
-    "col_dy": "DY 12M",
-    "col_dy_cdi": "DY vs CDI",
-    "col_vacancy": "Vacância",
-    "col_liquidity": "Liquidez",
-    "col_score": "Score",
-    "loading": "Carregando FIIs...",
-    "empty": "Nenhum FII encontrado."
+    "subtitle": "Fundos Imobiliários · Dados atualizados a cada 10 minutos via brapi.dev"
   },
   "asset": {
     "current_price": "Preço atual",

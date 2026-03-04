@@ -79,24 +79,7 @@
   },
   "fiis": {
     "title": "REITs — Valuation Ranking",
-    "subtitle": "Real estate funds ranked by P/B, DY and comparison with interest rate.",
-    "filter_segment": "Filter by segment",
-    "all_segments": "All segments",
-    "context_cdi": "Current rate",
-    "context_beat_cdi": "REITs beating the rate",
-    "context_below_pvp": "REITs with P/B below 1",
-    "col_rank": "Rank",
-    "col_ticker": "Ticker",
-    "col_segment": "Segment",
-    "col_price": "Price",
-    "col_pvp": "P/B",
-    "col_dy": "DY 12M",
-    "col_dy_cdi": "DY vs Rate",
-    "col_vacancy": "Vacancy",
-    "col_liquidity": "Liquidity",
-    "col_score": "Score",
-    "loading": "Loading REITs...",
-    "empty": "No REITs found."
+    "subtitle": "Real estate funds · Data updated every 10 minutes via brapi.dev"
   },
   "asset": {
     "current_price": "Current price",
