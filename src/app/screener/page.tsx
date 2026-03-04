@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { getScreenerData } from "@/lib/api/brapi";
 import { ScreenerTable } from "@/components/screener/ScreenerTable";
 import { ScreenerFilters } from "@/components/screener/ScreenerFilters";
-import { MarketOverviewCards } from "@/components/screener/MarketOverviewCards";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Quote, AssetType, SortField } from "@/types";
 
@@ -78,21 +77,6 @@ export default function ScreenerPage({ searchParams }: PageProps) {
         <p className="text-sm text-muted-foreground">
           {total} · Dados atualizados a cada 10 minutos via brapi.dev
         </p>
-      </div>
-
-      {/* Market overview bignumbers */}
-      <div className="mb-6">
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-xl" />
-              ))}
-            </div>
-          }
-        >
-          <MarketOverviewCards />
-        </Suspense>
       </div>
 
       {/* Filters — client component */}

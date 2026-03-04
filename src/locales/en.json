@@ -3,6 +3,7 @@
     "logo": "Yield.co",
     "tagline": "Simplified valuation",
     "nav": {
+      "home": "Home",
       "screener": "Screener",
       "stocks": "Stocks",
       "fiis": "REITs",
@@ -16,6 +17,29 @@
   },
   "footer": {
     "text": "Yield.co — Open source. Data: brapi.dev, BCB"
+  },
+  "home": {
+    "tag": "Open Source · Free · B3",
+    "title": {
+      "line1": "Stock Valuation",
+      "line2": "& REITs",
+      "line3": "made simple"
+    },
+    "paragraph": "Yield.co is an open source screener to analyze the fundamentals of companies and real estate funds on the B3 — directly in the browser, no login, no database.",
+    "cta_stocks": "View Stocks",
+    "cta_github": "View on GitHub",
+    "feature_1": {
+      "title": "Complete Screener",
+      "description": "Access fundamental data, multiples, indicators, and prices of stocks and REITs listed on the B3 — all in one place."
+    },
+    "feature_2": {
+      "title": "Quick Analysis",
+      "description": "Get a quick analysis of fair price, margin of safety, and buy, sell, or neutral signals for each asset."
+    },
+    "feature_3": {
+      "title": "Real-time Data",
+      "description": "Quotes and fundamentals via brapi.dev, with native Next.js caching."
+    }
   },
   "screener": {
     "search_placeholder": "Search by name or ticker...",

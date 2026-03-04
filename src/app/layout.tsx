@@ -3,6 +3,9 @@ import { Providers } from "./providers";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import "./globals.css";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import MarketOverviewSummary from "@/components/sections/MarketOverviewSummary";
 
 export const metadata: Metadata = {
   title: "Yield.co — Valuation de Ações e FIIs",
@@ -26,8 +29,12 @@ export default function RootLayout({
           <div className="md:ml-56 flex flex-col min-h-screen">
             <Header />
 
+            <Suspense fallback={<Skeleton className="h-8 w-full" />}>
+              <MarketOverviewSummary />
+            </Suspense>
+
             {/* Conteúdo scrollável abaixo do header */}
-            <main className="flex-1 mt-14 p-6 max-w-7xl w-full mx-auto">
+            <main className="flex-1 mt-6 p-6 max-w-7xl w-full mx-auto">
               {children}
             </main>
 

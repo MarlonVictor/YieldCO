@@ -3,6 +3,7 @@
     "logo": "Yield.co",
     "tagline": "Valuation simplificado",
     "nav": {
+      "home": "Home",
       "screener": "Screener",
       "stocks": "Ações",
       "fiis": "FIIs",
@@ -16,6 +17,29 @@
   },
   "footer": {
     "text": "Yield.co — Open source. Dados: brapi.dev, BCB"
+  },
+  "home": {
+    "tag": "Open Source · Gratuito · B3",
+    "title": {
+      "line1": "Valuation de Ações",
+      "line2": "& FIIs",
+      "line3": "sem complicação"
+    },
+    "paragraph": "Yield.co é um screener open source para analisar fundamentos de empresas e fundos imobiliários da B3 — direto no browser, sem login, sem banco de dados.",
+    "cta_stocks": "Ver Ações",
+    "cta_github": "Ver no GitHub",
+    "feature_1": {
+      "title": "Screener Completo",
+      "description": "Acesse dados fundamentais, múltiplos, indicadores e preços de ações e FIIs listados na B3 — tudo em um só lugar."
+    },
+    "feature_2": {
+      "title": "Análise Rápida",
+      "description": "Obtenha uma análise rápida de preço justo, margem de segurança e sinal de compra, venda ou neutro para cada ativo."
+    },
+    "feature_3": {
+      "title": "Dados em tempo real",
+      "description": "Cotações e fundamentos via brapi.dev, com cache nativo do Next.js."
+    }
   },
   "screener": {
     "search_placeholder": "Buscar por nome ou ticker...",
