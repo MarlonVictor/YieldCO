@@ -10,6 +10,11 @@ export function formatBRL(value: number | undefined | null): string {
   }).format(value);
 }
 
+export function parseAndFormatBRL(value: string | undefined | null): string {
+  if (!value) return "—";
+  return formatBRL(parseFloat(value));
+}
+
 export function formatPercent(
   value: number | undefined | null,
   decimals = 2,
