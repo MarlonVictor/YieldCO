@@ -11,7 +11,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChangeCell } from "./ChangeCell";
-import { formatBRL, formatBillions, formatMultiple } from "@/utils/format";
+import {
+  formatBRL,
+  formatBillions,
+  formatMultiple,
+  parseAndFormatBRL,
+} from "@/utils/format";
 import { useRef, useState } from "react";
 import type { Quote } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -137,8 +142,8 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
 
               <TableCell className="text-right w-40">
                 <p className="font-semibold">
-                  {formatBRL(q.dayRange.split(" - ").at(0))} -{" "}
-                  {formatBRL(q.dayRange.split(" - ").at(1))}
+                  {parseAndFormatBRL(q.dayRange.split(" - ").at(0))} -{" "}
+                  {parseAndFormatBRL(q.dayRange.split(" - ").at(1))}
                 </p>
                 <p className="font-thin text-xs tabular-nums text-muted-foreground">
                   {formatBRL(q.priceLow52)} - {formatBRL(q.priceHigh52)}
