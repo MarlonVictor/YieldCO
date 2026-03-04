@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Video } from "../../types/youtube";
 
 const API_KEY = process.env.YOUTUBE_API_KEY!;
