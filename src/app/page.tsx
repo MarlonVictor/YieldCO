@@ -52,7 +52,7 @@ export default function RootPage() {
             size="lg"
             className="bg-emerald-600 hover:bg-emerald-700 text-white"
           >
-            <Link href="/screener">
+            <Link href="/acoes">
               {t("home.cta_stocks")} <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

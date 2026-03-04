@@ -44,7 +44,7 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
   if (!data.length) {
     return (
       <p className="py-16 text-center text-muted-foreground">
-        {t("screener.no_assets_found")}
+        {t("stocks.no_assets_found")}
       </p>
     );
   }
@@ -63,19 +63,19 @@ export function ScreenerTable({ data }: ScreenerTableProps) {
           )}
         >
           <TableRow className="text-xs uppercase text-muted-foreground">
-            <TableHead className="w-52">{t("screener.table.ticker")}</TableHead>
-            <TableHead>{t("screener.table.sector")}</TableHead>
+            <TableHead className="w-52">{t("stocks.table.ticker")}</TableHead>
+            <TableHead>{t("stocks.table.sector")}</TableHead>
             <TableHead className="text-right w-24">
-              {t("screener.table.price")}
+              {t("stocks.table.price")}
             </TableHead>
             <TableHead className="text-right w-40">
-              {t("screener.table.range")}
+              {t("stocks.table.range")}
             </TableHead>
             <TableHead className="text-right">
-              {t("screener.table.p_e")}
+              {t("stocks.table.p_e")}
             </TableHead>
             <TableHead className="text-right">
-              {t("screener.table.market_cap")}
+              {t("stocks.table.market_cap")}
             </TableHead>
           </TableRow>
         </TableHeader>

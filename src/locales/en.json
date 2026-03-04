@@ -41,8 +41,24 @@
       "description": "Quotes and fundamentals via brapi.dev, with native Next.js caching."
     }
   },
-  "screener": {
+  "stocks": {
+    "title": "Stocks — Valuation Ranking",
+    "subtitle": "Stocks · Data updated every 10 minutes via brapi.dev",
+    "label_search": "Search",
     "search_placeholder": "Search by name or ticker...",
+    "label_sector": "Sector",
+    "filter_sector": "Filter by sector",
+    "all_sectors": "All sectors",
+    "label_sort": "Sort by",
+    "sort_label": "Sort by",
+    "sort": {
+      "marketCap": "Market Cap",
+      "price": "Price",
+      "change": "Variation",
+      "pe": "P/E",
+      "priceHigh52": "52w High",
+      "priceLow52": "52w Low"
+    },
     "table": {
       "ticker": "Ticker",
       "sector": "Sector",
@@ -56,24 +72,10 @@
     "reit": "REIT",
     "stock": "Stock"
   },
-  "stocks": {
-    "title": "Stocks — Valuation Ranking",
-    "subtitle": "Assets ranked by discount score combining Graham, Bazin and fundamental multiples.",
-    "filter_sector": "Filter by sector",
-    "all_sectors": "All sectors",
-    "col_rank": "Rank",
-    "col_ticker": "Ticker",
-    "col_sector": "Sector",
-    "col_price": "Price",
-    "col_graham": "Graham",
-    "col_bazin": "Bazin",
-    "col_margin": "Margin of Safety",
-    "col_pl": "P/E",
-    "col_pvp": "P/B",
-    "col_dy": "DY",
-    "col_score": "Score",
-    "loading": "Loading stocks...",
-    "empty": "No stocks found."
+  "404": {
+    "title": "Asset or page not found",
+    "message": "Check if the ticker is correct or go back to Home.",
+    "cta": "Go to Home"
   },
   "fiis": {
     "title": "REITs — Valuation Ranking",
