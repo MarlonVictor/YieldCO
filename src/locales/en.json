@@ -7,6 +7,7 @@
       "screener": "Screener",
       "stocks": "Stocks",
       "fiis": "REITs",
+      "videos": "Channel Hub",
       "calculators": "Calculators"
     }
   },
@@ -80,6 +81,19 @@
   "fiis": {
     "title": "REITs — Valuation Ranking",
     "subtitle": "Real estate funds · Data updated every 10 minutes via brapi.dev"
+  },
+  "video": {
+    "only_important": "Only important",
+    "all_videos": "All",
+    "found": "found",
+    "none_important": "No important videos found.",
+    "none": "No videos found.",
+    "remove_important": "Remove from important",
+    "save_important": "Save as important",
+    "mark_as_watched": "Mark as watched",
+    "mark_as_unwatched": "Mark as unwatched",
+    "previous": "Previous",
+    "next": "Next"
   },
   "asset": {
     "current_price": "Current price",

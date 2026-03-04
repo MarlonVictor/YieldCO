@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { key: "sidebar.nav.home", href: "/" },
   { key: "sidebar.nav.stocks", href: "/acoes" },
   { key: "sidebar.nav.fiis", href: "/fiis" },
+  { key: "sidebar.nav.videos", href: "/videos" },
   // { key: "sidebar.nav.calculators", href: "" },
 ] as const;
 

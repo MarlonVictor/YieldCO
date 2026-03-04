@@ -7,6 +7,7 @@
       "screener": "Screener",
       "stocks": "Ações",
       "fiis": "FIIs",
+      "videos": "Canal Hub",
       "calculators": "Calculadoras"
     }
   },
@@ -80,6 +81,19 @@
   "fiis": {
     "title": "FIIs — Ranking de Valuation",
     "subtitle": "Fundos Imobiliários · Dados atualizados a cada 10 minutos via brapi.dev"
+  },
+  "video": {
+    "only_important": "Apenas importantes",
+    "all_videos": "Todos",
+    "found": "encontrado",
+    "none_important": "Nenhum vídeo importante encontrado.",
+    "none": "Nenhum vídeo encontrado.",
+    "remove_important": "Remover de importantes",
+    "save_important": "Salvar como importante",
+    "mark_as_watched": "Marcar como assistido",
+    "mark_as_unwatched": "Marcar como não assistido",
+    "previous": "Anterior",
+    "next": "Próxima"
   },
   "asset": {
     "current_price": "Preço atual",
